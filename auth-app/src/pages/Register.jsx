@@ -3,11 +3,13 @@ import { registerUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({ role: "ADMIN" });
   const [msg, setMsg] = useState("");
   const [msgType, setMsgType] = useState("error");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const roles = ["ADMIN"];
 
   const handleSubmit = async () => {
     if (!form.username || !form.email || !form.password) {
@@ -23,7 +25,9 @@ const Register = () => {
     }
 
     setLoading(true);
-    const res = await registerUser({ ...form, role: "ADMIN" });
+    console.log("Submitting form:", { ...form, role: form.role });
+    const res = await registerUser({ ...form, role: form.role });
+    console.log("Registration response:", res);
     setLoading(false);
 
     if (res.success) {
@@ -67,6 +71,17 @@ const Register = () => {
               className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-slate-700 transition duration-200 text-gray-900 bg-white placeholder-gray-500"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
+          </div>
+          <div>
+            <select
+              value={form.role || "MEMBER"}
+              onChange={(e) => setForm({ ...form, role: e.target.value })}
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-slate-700 transition duration-200 text-gray-900 bg-white"
+            >
+              {/* <option value="MEMBER">Member</option> */}
+              <option value="ADMIN">Admin</option>
+              {/* <option value="MODERATOR">Moderator</option> */}
+            </select>
           </div>
         </div>
 
