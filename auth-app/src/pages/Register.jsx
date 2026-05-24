@@ -25,8 +25,14 @@ const Register = () => {
     }
 
     setLoading(true);
-    console.log("Submitting form:", { ...form, role: form.role });
-    const res = await registerUser({ ...form, role: form.role });
+    const payload = {
+      username: form.username,
+      email: form.email,
+      password: form.password,
+      role: "ADMIN"
+    };
+    console.log("Submitting payload:", payload);
+    const res = await registerUser(payload);
     console.log("Registration response:", res);
     setLoading(false);
 

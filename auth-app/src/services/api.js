@@ -2,7 +2,16 @@ const BASE_URL = "https://api.freeapi.app/api/v1/users";
 
 const handleResponse = async (res) => {
   const data = await res.json();
+  console.log("API Response status:", res.status, "Data:", data);
   if (!res.ok) {
+    // Log full error details
+    console.error("API Error Details:", {
+      status: res.status,
+      statusText: res.statusText,
+      message: data.message,
+      errors: data.errors || data.error,
+      fullData: data
+    });
     throw new Error(data.message || `HTTP Error: ${res.status}`);
   }
   return data;
@@ -15,13 +24,19 @@ const getAuthHeader = () => {
 
 export const registerUser = async (data) => {
   try {
+    console.log("Sending registration data:", data);
     const res = await fetch(`${BASE_URL}/register`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
       body: JSON.stringify(data),
     });
-    return await handleResponse(res);
+    const result = await handleResponse(res);
+    return result;
   } catch (error) {
+    console.error("Registration error:", error.message);
     return { success: false, message: error.message };
   }
 };
